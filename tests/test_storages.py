@@ -8,19 +8,18 @@ remote storage systems.
 import os
 import shutil
 import tempfile
-from os import path
 from datetime import datetime
-from packaging import version
-from packaging.specifiers import SpecifierSet
+from os import path
 
 import django
 from django.core.files.base import File
 from django.core.files.storage import FileSystemStorage, Storage
 from django.test import TestCase
+from packaging import version
+from packaging.specifiers import SpecifierSet
 
 from queued_storage.backends import QueuedStorage
 from queued_storage.conf import settings
-
 from . import models
 
 DJANGO_VERSION = django.get_version()

@@ -1,4 +1,4 @@
-from django.db.models.fields.files import FileField, FieldFile
+from django.db.models.fields.files import FieldFile, FileField
 
 
 class QueuedFieldFile(FieldFile):
