@@ -1,11 +1,8 @@
-flake8
 coverage
-celery
-SQLAlchemy
-anyjson
-pytest-django
-pytest-cov
-pytest-sugar
+flake8
+pytest
 pytest-assume
 pytest-cov
+pytest-django
 pytest-flake8
+pytest-sugar
