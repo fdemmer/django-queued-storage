@@ -41,11 +41,12 @@ Installation
 Configuration
 -------------
 
--  Follow the configuration instructions for
-   django-celery_
--  Set up a `caching backend`_
--  Add ``'queued_storage'`` to your ``INSTALLED_APPS`` setting
+- Follow the configuration instructions for `Celery with Django`_
+- Set up a `caching backend`_
+- Add ``'queued_storage'`` to your ``INSTALLED_APPS`` setting
+- For further details consult the `documentation`_
 
-.. _django-celery: https://github.com/ask/django-celery
-.. _`caching backend`: https://docs.djangoproject.com/en/1.10/topics/cache/#setting-up-the-cache
-.. _Celery:  http://celeryproject.org/
+.. _documentation: http://django-queued-storage.readthedocs.io/en/latest/
+.. _Celery with Django: http://docs.celeryproject.org/en/3.1/django/first-steps-with-django.html
+.. _caching backend: https://docs.djangoproject.com/en/2.1/topics/cache/#setting-up-the-cache
+.. _Celery: http://celeryproject.org/
