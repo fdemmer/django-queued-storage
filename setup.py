@@ -35,7 +35,6 @@ setup(
         'Topic :: Utilities',
     ],
     install_requires=[
-        'packaging>=16.8',
         'six>=1.10.0',
         'django-appconf>=0.4',
         'celery~=3.1',
