@@ -15,6 +15,7 @@ def test_task(name, cache_key,
 def delay(*args, **kwargs):
     test_task(*args, **kwargs)
 
+
 test_task.delay = delay
 
 

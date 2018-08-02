@@ -21,5 +21,3 @@ def import_attribute(import_path=None, options=None):
     except AttributeError:
         raise ImproperlyConfigured(
             'Module "%s" does not define a "%s" class.' % (module, classname))
-
-

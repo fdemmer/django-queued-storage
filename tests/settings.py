@@ -12,7 +12,6 @@ INSTALLED_APPS = [
     'tests',
 ]
 
-
 SECRET_KEY = 'top_secret'
 
 CACHES = {

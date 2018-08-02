@@ -1,6 +1,6 @@
+from celery.task import Task
 from django.core.cache import cache
 
-from celery.task import Task
 try:
     from celery.utils.log import get_task_logger
 except ImportError:

@@ -1,13 +1,10 @@
-import six
-
-from packaging import version
-
 import django
-
+import six
 from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.functional import SimpleLazyObject
 from django.utils.http import urlquote
+from packaging import version
 
 from .conf import settings
 from .utils import import_attribute
@@ -19,7 +16,6 @@ if version.parse(DJANGO_VERSION) <= version.parse('1.7'):
 
 
 class LazyBackend(SimpleLazyObject):
-
     def __init__(self, import_path, options):
         backend = import_attribute(import_path)
         super(LazyBackend, self).__init__(lambda: backend(**options))
@@ -100,7 +96,7 @@ class QueuedStorage(object):
         if backend is None:  # pragma: no cover
             raise ImproperlyConfigured("The QueuedStorage class '%s' "
                                        "doesn't define a needed backend." %
-                                       (self))
+                                       self)
         if not isinstance(backend, six.string_types):
             raise ImproperlyConfigured("The QueuedStorage class '%s' "
                                        "requires its backends to be "
@@ -367,7 +363,6 @@ class QueuedStorage(object):
         :type name: str
         :rtype: :class:`~python:datetime.datetime`
         """
-
         return self.get_storage(name).get_created_time(name)
 
     def get_modified_time(self, name):
@@ -380,11 +375,11 @@ class QueuedStorage(object):
         :type name: str
         :rtype: :class:`~python:datetime.datetime`
         """
-
         return self.get_storage(name).get_modified_time(name)
 
     def generate_filename(self, filename):
         return self.get_storage(filename).generate_filename(filename)
+
 
 if version.parse(DJANGO_VERSION) <= version.parse('1.7'):
     QueuedStorage = deconstructible(QueuedStorage)
