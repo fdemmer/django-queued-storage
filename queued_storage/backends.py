@@ -180,11 +180,7 @@ class QueuedStorage(object):
         # Use a name that is available on both the local and remote storage
         # systems and save locally.
         name = self.get_available_name(name)
-        try:
-            name = self.local.save(name, content, max_length=max_length)
-        except TypeError:
-            # Django < 1.10
-            name = self.local.save(name, content)
+        name = self.local.save(name, content, max_length=max_length)
 
         # Pass on the cache key to prevent duplicate cache key creation,
         # we save the result in the storage to be able to test for it
