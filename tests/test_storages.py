@@ -25,8 +25,12 @@ from . import models
 DJANGO_VERSION = django.get_version()
 
 
-class StorageTests(TestCase):
+class FileFileStorage(QueuedStorage):
+    local = 'django.core.files.storage.FileSystemStorage'
+    remote = 'django.core.files.storage.FileSystemStorage'
 
+
+class StorageTests(TestCase):
     def setUp(self):
         self.old_celery_always_eager = getattr(
             settings, 'CELERY_ALWAYS_EAGER', False)
@@ -92,12 +96,11 @@ class StorageTests(TestCase):
         """
         Make sure that saving to remote locations actually works
         """
-        storage = QueuedStorage(
-            local='django.core.files.storage.FileSystemStorage',
-            remote='django.core.files.storage.FileSystemStorage',
+        storage = FileFileStorage(
             local_options=dict(location=self.local_dir),
             remote_options=dict(location=self.remote_dir),
-            task='tests.tasks.test_task')
+            task='tests.tasks.test_task',
+        )
 
         field = models.TestModel._meta.get_field('testfile')
         field.storage = storage
@@ -113,11 +116,10 @@ class StorageTests(TestCase):
         """
         Make sure it actually works when using Celery as a task queue
         """
-        storage = QueuedStorage(
-            local='django.core.files.storage.FileSystemStorage',
-            remote='django.core.files.storage.FileSystemStorage',
+        storage = FileFileStorage(
             local_options=dict(location=self.local_dir),
-            remote_options=dict(location=self.remote_dir))
+            remote_options=dict(location=self.remote_dir),
+        )
 
         field = models.TestModel._meta.get_field('testfile')
         field.storage = storage
@@ -125,7 +127,6 @@ class StorageTests(TestCase):
         obj = models.TestModel()
         obj.testfile.save(self.test_file_name, File(self.test_file))
         obj.save()
-
 
         self.assertTrue(obj.testfile.storage.result.get())
         self.assertTrue(path.isfile(path.join(self.local_dir, obj.testfile.name)))
@@ -173,12 +174,11 @@ class StorageTests(TestCase):
         """
         Make sure the TransferAndDelete task does what it says
         """
-        storage = QueuedStorage(
-            local='django.core.files.storage.FileSystemStorage',
-            remote='django.core.files.storage.FileSystemStorage',
+        storage = FileFileStorage(
             local_options=dict(location=self.local_dir),
             remote_options=dict(location=self.remote_dir),
-            task='queued_storage.tasks.TransferAndDelete')
+            task='queued_storage.tasks.TransferAndDelete',
+        )
 
         field = models.TestModel._meta.get_field('testfile')
         field.storage = storage
@@ -201,12 +201,11 @@ class StorageTests(TestCase):
         Make sure an exception is thrown when the transfer task does not return
         a boolean. We don't want to confuse Celery.
         """
-        storage = QueuedStorage(
-            local='django.core.files.storage.FileSystemStorage',
-            remote='django.core.files.storage.FileSystemStorage',
+        storage = FileFileStorage(
             local_options=dict(location=self.local_dir),
             remote_options=dict(location=self.remote_dir),
-            task='tests.tasks.NoneReturningTask')
+            task='tests.tasks.NoneReturningTask',
+        )
 
         field = models.TestModel._meta.get_field('testfile')
         field.storage = storage
@@ -222,12 +221,12 @@ class StorageTests(TestCase):
         """
         Make sure the transfer task is retried correctly.
         """
-        storage = QueuedStorage(
-            local='django.core.files.storage.FileSystemStorage',
-            remote='django.core.files.storage.FileSystemStorage',
+        storage = FileFileStorage(
             local_options=dict(location=self.local_dir),
             remote_options=dict(location=self.remote_dir),
-            task='tests.tasks.RetryingTask')
+            task='tests.tasks.RetryingTask',
+        )
+
         field = models.TestModel._meta.get_field('testfile')
         field.storage = storage
 
@@ -241,12 +240,11 @@ class StorageTests(TestCase):
         self.assertTrue(models.TestModel.retried)
 
     def test_delayed_storage(self):
-        storage = QueuedStorage(
-            local='django.core.files.storage.FileSystemStorage',
-            remote='django.core.files.storage.FileSystemStorage',
+        storage = FileFileStorage(
             local_options=dict(location=self.local_dir),
             remote_options=dict(location=self.remote_dir),
-            delayed=True)
+            delayed=True,
+        )
 
         field = models.TestModel._meta.get_field('testfile')
         field.storage = storage
@@ -269,12 +267,11 @@ class StorageTests(TestCase):
             "Remote file is not available.")
 
     def test_remote_file_field(self):
-        storage = QueuedStorage(
-            local='django.core.files.storage.FileSystemStorage',
-            remote='django.core.files.storage.FileSystemStorage',
+        storage = FileFileStorage(
             local_options=dict(location=self.local_dir),
             remote_options=dict(location=self.remote_dir),
-            delayed=True)
+            delayed=True,
+        )
 
         field = models.TestModel._meta.get_field('remote')
         field.storage = storage
