@@ -222,17 +222,19 @@ class QueuedStorage(Storage):
         # proxy to storage with the given name
         return self.get_storage(name).get_valid_name(name)
 
-    def get_available_name(self, name):
+    def get_available_name(self, name, max_length=None):
         """
         Returns a filename that's free on both the local and remote storage
         systems, and available for new content to be written to.
 
         :param name: file name
         :type name: str
+        :param max_length: maximum length of the filename
+        :type max_length: int
         :rtype: str
         """
-        local_available_name = self.local.get_available_name(name)
-        remote_available_name = self.remote.get_available_name(name)
+        local_available_name = self.local.get_available_name(name, max_length)
+        remote_available_name = self.remote.get_available_name(name, max_length)
 
         if remote_available_name > local_available_name:
             return remote_available_name
