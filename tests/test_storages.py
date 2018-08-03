@@ -149,14 +149,15 @@ class StorageTests(TestCase):
                          os.stat(self.test_file_path).st_size)
         self.assertEqual(storage.url(self.test_file_name), self.test_file_name)
 
-        if version.parse(DJANGO_VERSION) in SpecifierSet("<=2.0"):
+        # deprecated since 1.10, removed in 2.0
+        if version.parse(DJANGO_VERSION) in SpecifierSet("<2.0"):
             self.assertIsInstance(storage.accessed_time(subdir_path), datetime)
             self.assertIsInstance(storage.created_time(subdir_path), datetime)
             self.assertIsInstance(storage.modified_time(subdir_path), datetime)
-        else:
-            self.assertIsInstance(storage.get_accessed_time(subdir_path), datetime)
-            self.assertIsInstance(storage.get_created_time(subdir_path), datetime)
-            self.assertIsInstance(storage.get_modified_time(subdir_path), datetime)
+
+        self.assertIsInstance(storage.get_accessed_time(subdir_path), datetime)
+        self.assertIsInstance(storage.get_created_time(subdir_path), datetime)
+        self.assertIsInstance(storage.get_modified_time(subdir_path), datetime)
 
         subdir_name = 'queued_storage_2.txt'
         testfile = storage.open(subdir_name, 'w')
