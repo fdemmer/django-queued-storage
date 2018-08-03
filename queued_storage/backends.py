@@ -1,6 +1,7 @@
 import six
 from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured
+from django.core.files.storage import Storage
 from django.utils.functional import SimpleLazyObject
 from django.utils.http import urlquote
 
@@ -14,7 +15,7 @@ class LazyBackend(SimpleLazyObject):
         super(LazyBackend, self).__init__(lambda: backend(**options))
 
 
-class QueuedStorage(object):
+class QueuedStorage(Storage):
     """
     Base class for queued storages. You can use this to specify your own
     backends.
@@ -148,7 +149,7 @@ class QueuedStorage(object):
         """
         return self.get_storage(name) is self.remote
 
-    def open(self, name, mode='rb'):
+    def _open(self, name, mode):
         """
         Retrieves the specified file from storage.
 
@@ -160,7 +161,7 @@ class QueuedStorage(object):
         """
         return self.get_storage(name).open(name, mode)
 
-    def save(self, name, content, max_length=None):
+    def _save(self, name, content, max_length=None):
         """
         Saves the given content with the given name using the local
         storage.
@@ -178,12 +179,12 @@ class QueuedStorage(object):
         :type max_length: int
         :rtype: str
         """
+        # The name we get here was already passed through get_available_name()
+        # in Storage.save()
         cache_key = self.get_cache_key(name)
         cache.set(cache_key, False)
 
-        # Use a name that is available on both the local and remote storage
-        # systems and save locally.
-        name = self.get_available_name(name)
+        # save locally
         name = self.local.save(name, content, max_length=max_length)
 
         # Pass on the cache key to prevent duplicate cache key creation,
