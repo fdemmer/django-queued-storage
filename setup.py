@@ -37,7 +37,7 @@ setup(
     install_requires=[
         'six>=1.10.0',
         'django-appconf>=0.4',
-        'celery~=3.1',
+        'celery',
         'django',
     ],
     zip_safe=False,
