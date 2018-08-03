@@ -163,7 +163,9 @@ class QueuedStorage(object):
     def save(self, name, content, max_length=None):
         """
         Saves the given content with the given name using the local
-        storage. If the :attr:`~queued_storage.backends.QueuedStorage.delayed`
+        storage.
+
+        If the :attr:`~queued_storage.backends.QueuedStorage.delayed`
         attribute is ``True`` this will automatically call the
         :meth:`~queued_storage.backends.QueuedStorage.transfer` method
         queuing the transfer from local to remote storage.
@@ -172,6 +174,8 @@ class QueuedStorage(object):
         :type name: str
         :param content: content of the file specified by name
         :type content: :class:`~django:django.core.files.File`
+        :param max_length: maximum length of the filename
+        :type max_length: int
         :rtype: str
         """
         cache_key = self.get_cache_key(name)
@@ -214,6 +218,7 @@ class QueuedStorage(object):
         :type name: str
         :rtype: str
         """
+        # proxy to storage with the given name
         return self.get_storage(name).get_valid_name(name)
 
     def get_available_name(self, name):
@@ -255,9 +260,8 @@ class QueuedStorage(object):
 
     def exists(self, name):
         """
-        Returns ``True`` if a file referened by the given name already exists
-        in the storage system, or False if the name is available for a new
-        file.
+        Returns True if a file referenced by the given name already exists in
+        the storage system, or False if the name is available for a new file.
 
         :param name: file name
         :type name: str
@@ -300,7 +304,7 @@ class QueuedStorage(object):
     def accessed_time(self, name):
         """
         Returns the last accessed time (as datetime object) of the file
-        specified by name.
+        specified by name. Deprecated: use get_accessed_time() instead.
 
         :param name: file name
         :type name: str
@@ -311,7 +315,7 @@ class QueuedStorage(object):
     def created_time(self, name):
         """
         Returns the creation time (as datetime object) of the file
-        specified by name.
+        specified by name. Deprecated: use get_created_time() instead.
 
         :param name: file name
         :type name: str
@@ -322,7 +326,7 @@ class QueuedStorage(object):
     def modified_time(self, name):
         """
         Returns the last modified time (as datetime object) of the file
-        specified by name.
+        specified by name. Deprecated: use get_modified_time() instead.
 
         :param name: file name
         :type name: str
@@ -332,9 +336,8 @@ class QueuedStorage(object):
 
     def get_accessed_time(self, name):
         """
-        Django +1.10
-        Returns the last accessed time (as datetime object) of the file
-        specified by name.
+        Return the last accessed time (as a datetime) of the file specified by
+        name. The datetime will be timezone-aware if USE_TZ=True.
 
         :param name: file name
         :type name: str
@@ -344,9 +347,8 @@ class QueuedStorage(object):
 
     def get_created_time(self, name):
         """
-        Django +1.10
-        Returns the creation time (as datetime object) of the file
-        specified by name.
+        Return the creation time (as a datetime) of the file specified by name.
+        The datetime will be timezone-aware if USE_TZ=True.
 
         :param name: file name
         :type name: str
@@ -356,9 +358,8 @@ class QueuedStorage(object):
 
     def get_modified_time(self, name):
         """
-        Django +1.10
-        Returns the last modified time (as datetime object) of the file
-        specified by name.
+        Return the last modified time (as a datetime) of the file specified by
+        name. The datetime will be timezone-aware if USE_TZ=True.
 
         :param name: file name
         :type name: str

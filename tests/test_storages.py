@@ -31,8 +31,12 @@ class StorageTests(TestCase):
         self.old_celery_always_eager = getattr(
             settings, 'CELERY_ALWAYS_EAGER', False)
         settings.CELERY_ALWAYS_EAGER = True
+
+        # create directories for test storages
         self.local_dir = tempfile.mkdtemp()
         self.remote_dir = tempfile.mkdtemp()
+
+        # create test file to save
         tmp_dir = tempfile.mkdtemp()
         self.test_file_name = 'queued_storage.txt'
         self.test_file_path = path.join(tmp_dir, self.test_file_name)
