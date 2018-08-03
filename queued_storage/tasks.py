@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from celery.task import Task
 from celery.utils.log import get_task_logger
 from django.core.cache import cache

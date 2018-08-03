@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from queued_storage.tasks import Transfer
 from queued_storage.utils import import_attribute
 

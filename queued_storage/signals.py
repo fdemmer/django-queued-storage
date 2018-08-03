@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 django-queued-storage ships with a signal fired after a file was transferred
 by the Transfer task. It provides the name of the file, the local and the
